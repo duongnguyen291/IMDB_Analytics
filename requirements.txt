@@ -6,3 +6,4 @@ numpy
 plotly
 matplotlib
 seaborn
+awscli
