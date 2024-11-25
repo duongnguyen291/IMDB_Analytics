@@ -16,7 +16,7 @@ class IMDbDataLoader:
         return self.spark.read.parquet(f"{self.base_path}/title_akas_parquet") # In4 about alternative titles of movies or shows
         
     def load_episodes(self):
-        return self.spark.read.parquet(f"{self.base_path}/episode_parquet") # About episodoes in a series
+        return self.spark.read.parquet(f"{self.base_path}/title_episode_parquet") # About episodoes in a series
 
     def load_principals(self):
         return self.spark.read.parquet(f"{self.base_path}/title_principals_parquet") # In4 about key indivisuals related to a title

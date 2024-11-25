@@ -1,2 +1,8 @@
 ipykernel==6.29.5
-pyspark
+pyspark==3.5.3
+plotly==5.24.1
+pandas==2.2.3
+numpy
+plotly
+matplotlib
+seaborn

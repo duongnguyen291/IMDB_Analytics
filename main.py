@@ -1,7 +1,7 @@
-from config.spark_config import create_spark_session
-from analysis.basic_analysis import MovieAnalyzer
-from visualization.plotly_charts import MovieVisualizer
-from data.data_loader import IMDbDataLoader
+from imdb_analytics.config.spark_config import create_spark_session
+from imdb_analytics.analysis.basic_analysis import MovieAnalyzer
+from imdb_analytics.visualization.plotly_charts import MovieVisualizer
+from imdb_analytics.data.data_loader import IMDbDataLoader
 
 def main():
     # Initialize Spark
