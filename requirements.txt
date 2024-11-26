@@ -6,5 +6,5 @@ numpy
 plotly
 matplotlib
 seaborn
-awscli
+awscli==1.36.9
 python-dotenv
