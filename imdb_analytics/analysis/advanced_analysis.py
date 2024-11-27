@@ -6,7 +6,8 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     explode, col, count, desc, avg, 
     sum , when, concat_ws,
-    split, year, struct, dense_rank, 
+    split, year, struct, dense_rank,
+    var_pop,  
 )
 from pyspark.sql.types import DoubleType
 
@@ -913,3 +914,52 @@ class AdvancedAnalysis:
         combined_performance = director_performance.unionByName(writer_performance)
 
         return combined_performance
+    def analyze_rating_variance_by_title_type(
+        titles_df, 
+        ratings_df
+    ):
+        """
+        Analyze the variance in ratings across different title types using IMDb datasets.
+
+        :param titles_path: Path to title.basics.tsv.gz
+        :param ratings_path: Path to title.ratings.tsv.gz
+        :return: DataFrame with rating variance, average rating, and title count by title type
+        """
+        # Initialize Spark Session
+        spark = SparkSession.builder \
+            .appName("Rating Variance by Title Type") \
+            .getOrCreate()
+
+        # Filter out adult content and invalid titles
+        filtered_titles = titles_df.filter(
+            (col('isAdult') == '0') & 
+            (col('titleType').isNotNull())
+        )
+
+        # Convert ratings to numeric types
+        ratings_df = ratings_df.withColumn(
+            'averageRating', 
+            col('averageRating').cast(DoubleType())
+        ).withColumn(
+            'numVotes', 
+            col('numVotes').cast('integer')
+        )
+
+        # Join titles with ratings
+        titles_with_ratings = filtered_titles.join(
+            ratings_df, 
+            filtered_titles['tconst'] == ratings_df['tconst'], 
+            'inner'
+        )
+
+        # Calculate variance, average rating, and count by title type
+        rating_variance_by_type = titles_with_ratings \
+            .groupBy('titleType') \
+            .agg(
+                var_pop('averageRating').alias('rating_variance'),
+                avg('averageRating').alias('avg_rating'),
+                count('tconst').alias('num_titles')
+            ) \
+            .orderBy(desc('rating_variance'))  # Sort by variance descending
+
+        return rating_variance_by_type
