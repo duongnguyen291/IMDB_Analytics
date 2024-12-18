@@ -8,3 +8,5 @@ matplotlib
 seaborn
 awscli==1.36.9
 python-dotenv
+distutils
+setuptools
