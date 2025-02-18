@@ -1,0 +1,37 @@
+from data.data_loader import IMDbDataLoader
+from config.spark_config import create_spark_session
+class IMDbReader:
+    def __init__(self,link):
+        self.link = link
+        self.spark = create_spark_session()
+        loader = IMDbDataLoader(self.spark, self.link)
+        self.titles_df = loader.load_titles()
+        self.rating_df = loader.load_ratings()
+        self.names_df = loader.load_names()
+        self.akas_df = loader.load_akas()
+        self.episode_df = loader.load_episodes()
+        self.principals_df = loader.load_principals()
+        self.crew_df = loader.load_crews()
+        self.principal_df = loader.load_principals()
+    def show_schema_and_samples(self):
+        print("===================Titles Schema====================")
+        self.titles_df.printSchema(5)
+        self.titles_df.show(5)
+        print("===================Rating Schema====================")
+        self.rating_df.printSchema(5)
+        self.rating_df.show(5)
+        print("===================Names Schema====================")
+        self.names_df.printSchema(5)
+        self.names_df.show(5)
+        print("===================Akas Schema====================")
+        self.akas_df.printSchema(5)
+        self.akas_df.show(5)
+        print("===================Episode Schema====================")
+        self.episode_df.printSchema(5)
+        self.episode_df.show(5)
+        print("===================Principal Schema====================")
+        self.principal_df.printSchema(5)
+        self.principal_df.show(5)
+        print("===================Crew Schema====================")
+        self.crew_df.printSchema(5)
+        self.crew_df.show(5)

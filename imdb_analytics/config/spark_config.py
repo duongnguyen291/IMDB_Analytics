@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 
 # Định nghĩa constants
-HDFS_HOST = "hdfs://localhost:9000"  # Hoặc địa chỉ HDFS của bạn
+HDFS_HOST = "hdfs://localhost:9000"  
 HDFS_PATH = f"{HDFS_HOST}/hadoop/data/parquet/"
 
 def create_spark_session(app_name="IMDb Analytics"):
@@ -16,15 +16,21 @@ def create_spark_session(app_name="IMDb Analytics"):
     """
     return SparkSession.builder \
         .appName(app_name) \
-        .config("spark.executor.memory", "4g") \
-        .config("spark.driver.memory", "2g") \
+        .master("spark://localhost:7077") \
+        .config("spark.executor.memory", "1g") \
+        .config("spark.driver.memory", "1g") \
         .config("spark.hadoop.fs.defaultFS", HDFS_HOST) \
         .config("spark.sql.warehouse.dir", f"{HDFS_HOST}/user/hive/warehouse") \
-        .config("spark.executor.cores", "2") \
-        .config("spark.driver.cores", "2") \
+        .config("spark.executor.cores", "1") \
+        .config("spark.driver.cores", "1") \
         .config("spark.sql.files.maxPartitionBytes", "128MB") \
-        .config("spark.sql.shuffle.partitions", "10") \
+        .config("spark.sql.shuffle.partitions", "4") \
+        .config("spark.executor.instances", "2")   \
         .getOrCreate()
+        # .config("spark.dynamicAllocation.minExecutors", "2") \
+        # .config("spark.dynamicAllocation.maxExecutors", "2") \
+        #  .config("spark.dynamicAllocation.enabled", "true") \
+       
 
 # Hàm tiện ích để kiểm tra kết nối HDFS
 def test_hdfs_connection(spark):
